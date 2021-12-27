@@ -182,7 +182,6 @@ Table Staff {
   rental Rental [not null]
   storeStafftostoreManagerStaffId Store
   Store Store
-  storeStoreId Int
 }
 
 Table Store {
@@ -196,6 +195,15 @@ Table Store {
   inventories Inventory [not null]
   staffStaffStoreIdtostore Staff [not null]
   Staff Staff [not null]
+}
+
+Table User {
+  userId String [pk]
+  createdDate DateTime [default: `now()`, not null]
+  lastUpdate DateTime [not null]
+  name String
+  email String [unique, not null]
+  password String [not null]
 }
 
 Enum FilmRating {
@@ -246,7 +254,7 @@ Ref: Staff.addressId > Address.addressId
 
 Ref: Staff.storeId - Store.storeId
 
-Ref: Staff.storeStoreId - Store.storeId
+Ref: Staff.storeId - Store.storeId
 
 Ref: Store.addressId > Address.addressId
 

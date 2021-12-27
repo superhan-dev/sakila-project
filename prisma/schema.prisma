@@ -235,8 +235,7 @@ model Staff {
   rental                          Rental[]
   storeStafftostoreManagerStaffId Store?    @relation("staffTostore_manager_staff_id")
 
-  Store        Store? @relation("staff_store_idTostore", fields: [storeStoreId], references: [storeId])
-  storeStoreId Int?   @db.UnsignedTinyInt
+  Store Store? @relation("staff_store_idTostore", fields: [storeId], references: [storeId])
   @@index([addressId], map: "idx_fk_address_id")
   @@index([storeId], map: "idx_fk_store_id")
   @@map("staff")
@@ -256,6 +255,18 @@ model Store {
   Staff Staff[] @relation("staffStoreIdtostore")
   @@index([addressId], map: "idx_fk_address_id")
   @@map("store")
+}
+
+model User {
+  userId      String   @id @default(cuid()) @map("user_id")
+  createdDate DateTime @default(now()) @map("create_date")
+  lastUpdate  DateTime @updatedAt @map("last_update")
+
+  name     String?
+  email    String  @unique
+  password String
+
+  @@map("user")
 }
 
 enum FilmRating {

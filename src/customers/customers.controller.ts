@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiCreatedResponse,
@@ -14,6 +15,7 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.gard';
 import { ApiPageResponse } from 'src/page/api-page-response-decorator';
 import { ConnectionArgs } from 'src/page/connection.args.dto';
 import { Page } from 'src/page/page.dto';
@@ -29,6 +31,7 @@ export class CustomersController {
   constructor(private readonly customersService: CustomersService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   @ApiCreatedResponse({ type: CustomerEntity })
   create(@Body() createCustomerDto: CreateCustomerDto) {
     return this.customersService.create(createCustomerDto);
@@ -41,6 +44,7 @@ export class CustomersController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ type: [CustomerEntity] })
   findDrafts() {
     return this.customersService.findDrafts();
@@ -53,6 +57,7 @@ export class CustomersController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiCreatedResponse({ type: CustomerEntity })
   update(
     @Param('id') id: string,
@@ -62,6 +67,7 @@ export class CustomersController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ type: CustomerEntity })
   remove(@Param('id') id: string) {
     return this.customersService.remove(+id);

@@ -1,0 +1,253 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table Actor {
+  actorId Int [pk, increment]
+  firstName String [not null]
+  lastName String [not null]
+  lastUpdate DateTime [default: `now()`, not null]
+  filmActors FilmActor [not null]
+}
+
+Table Address {
+  addressId Int [pk, increment]
+  address String [not null]
+  address2 String
+  district String [not null]
+  cityId Int [not null]
+  postalCode String
+  phone String [not null]
+  lastUpdate DateTime [default: `now()`, not null]
+  city City [not null]
+  customers Customer [not null]
+  staffs Staff [not null]
+  stores Store [not null]
+}
+
+Table Category {
+  categoryId Int [pk, increment]
+  name String [not null]
+  lastUpdate DateTime [default: `now()`, not null]
+  filmCategory FilmCategory [not null]
+}
+
+Table City {
+  cityId Int [pk, increment]
+  city String [not null]
+  countryId Int [not null]
+  lastUpdate DateTime [default: `now()`, not null]
+  country Country [not null]
+  address Address [not null]
+}
+
+Table Country {
+  countryId Int [pk, increment]
+  country String [not null]
+  lastUpdate DateTime [default: `now()`, not null]
+  city City [not null]
+}
+
+Table Customer {
+  customerId Int [pk, increment]
+  storeId Int [not null]
+  firstName String [not null]
+  lastName String [not null]
+  email String
+  addressId Int [not null]
+  active Boolean [not null, default: true]
+  createDate DateTime [not null]
+  lastUpdate DateTime [default: `now()`, not null]
+  address Address [not null]
+  stores Store [not null]
+  payments Payment [not null]
+  rentals Rental [not null]
+}
+
+Table Film {
+  filmId Int [pk, increment]
+  title String [not null]
+  description String
+  releaseYear Int
+  languageId Int [not null]
+  originalLanguageId Int
+  rentalDuration Int [not null, default: 3]
+  rentalRate Decimal [not null, default: 4.99]
+  length Int
+  replacementCost Decimal [not null, default: 19.990000000000002]
+  rating FilmRating [default: 'G']
+  specialFeatures String
+  lastUpdate DateTime [default: `now()`, not null]
+  languageFilmLanguageIdTolanguage Language [not null]
+  languageFilmOriginalLanguageIdTolanguage Language
+  filmActors FilmActor [not null]
+  filmAategories FilmCategory [not null]
+  inventories Inventory [not null]
+}
+
+Table FilmActor {
+  actorId Int [not null]
+  filmId Int [not null]
+  lastUpdate DateTime [default: `now()`, not null]
+  actor Actor [not null]
+  film Film [not null]
+
+  indexes {
+    (actorId, filmId) [pk]
+  }
+}
+
+Table FilmCategory {
+  filmId Int [not null]
+  categoryId Int [not null]
+  lastUpdate DateTime [default: `now()`, not null]
+  category Category [not null]
+  film Film [not null]
+
+  indexes {
+    (filmId, categoryId) [pk]
+  }
+}
+
+Table FilmText {
+  filmId Int [pk]
+  title String [not null]
+  description String
+}
+
+Table Inventory {
+  inventoryId Int [pk, increment]
+  filmId Int [not null]
+  storeId Int [not null]
+  lastUpdate DateTime [default: `now()`, not null]
+  film Film [not null]
+  store Store [not null]
+  rentals Rental [not null]
+}
+
+Table Language {
+  languageId Int [pk, increment]
+  name String [not null]
+  lastUpdate DateTime [default: `now()`, not null]
+  filmFilmLanguageIdtolanguage Film [not null]
+  filmFilmOriginalLanguageIdtolanguage Film [not null]
+}
+
+Table Payment {
+  paymentId Int [pk, increment]
+  customerId Int [not null]
+  staffId Int [not null]
+  rentalId Int
+  amount Decimal [not null]
+  paymentDateate DateTime [not null]
+  lastUpdate DateTime [default: `now()`, not null]
+  customer Customer [not null]
+  rental Rental
+  staff Staff [not null]
+}
+
+Table Rental {
+  rentalId Int [pk, increment]
+  rentalDate DateTime [not null]
+  inventoryId Int [not null]
+  customerId Int [not null]
+  returnDate DateTime
+  staffId Int [not null]
+  lastUpdate DateTime [default: `now()`, not null]
+  customer Customer [not null]
+  inventory Inventory [not null]
+  staff Staff [not null]
+  payments Payment [not null]
+
+  indexes {
+    (rentalDate, inventoryId, customerId) [unique]
+  }
+}
+
+Table Staff {
+  staffId Int [pk, increment]
+  firstName String [not null]
+  lastName String [not null]
+  addressId Int [not null]
+  picture Bytes
+  email String
+  storeId Int [not null]
+  active Boolean [not null, default: true]
+  username String [not null]
+  password String
+  lastUpdate DateTime [default: `now()`, not null]
+  address Address [not null]
+  storeStaffStoreIdtostore Store [not null]
+  payment Payment [not null]
+  rental Rental [not null]
+  storeStafftostoreManagerStaffId Store
+  Store Store
+  storeStoreId Int
+}
+
+Table Store {
+  storeId Int [pk, increment]
+  managerStaffId Int [unique, not null]
+  addressId Int [not null]
+  lastUpdate DateTime [default: `now()`, not null]
+  address Address [not null]
+  staffStafftostoreManagerStaffId Staff [not null]
+  customers Customer [not null]
+  inventories Inventory [not null]
+  staffStaffStoreIdtostore Staff [not null]
+  Staff Staff [not null]
+}
+
+Enum FilmRating {
+  G
+  PG
+  PG_13
+  R
+  NC_17
+}
+
+Ref: Address.cityId > City.cityId
+
+Ref: City.countryId > Country.countryId
+
+Ref: Customer.addressId > Address.addressId
+
+Ref: Customer.storeId > Store.storeId
+
+Ref: Film.languageId > Language.languageId
+
+Ref: Film.originalLanguageId > Language.languageId
+
+Ref: FilmActor.actorId > Actor.actorId
+
+Ref: FilmActor.filmId > Film.filmId
+
+Ref: FilmCategory.categoryId > Category.categoryId
+
+Ref: FilmCategory.filmId > Film.filmId
+
+Ref: Inventory.filmId > Film.filmId
+
+Ref: Inventory.storeId > Store.storeId
+
+Ref: Payment.customerId > Customer.customerId
+
+Ref: Payment.rentalId > Rental.rentalId
+
+Ref: Payment.staffId > Staff.staffId
+
+Ref: Rental.customerId > Customer.customerId
+
+Ref: Rental.inventoryId > Inventory.inventoryId
+
+Ref: Rental.staffId > Staff.staffId
+
+Ref: Staff.addressId > Address.addressId
+
+Ref: Staff.storeId - Store.storeId
+
+Ref: Staff.storeStoreId - Store.storeId
+
+Ref: Store.addressId > Address.addressId
+
+Ref: Store.managerStaffId - Staff.staffId
